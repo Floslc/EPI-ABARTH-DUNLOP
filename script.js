@@ -1,6 +1,7 @@
 /* ─── State ──────────────────────────────────────────────────── */
 let activeFilter  = 'tous';
 let searchQuery   = '';
+let activeSize    = '';   // pointure sélectionnée ('36', '42', … ou '' = toutes)
 let currentIndex  = 0;   // index dans la liste filtrée courante
 
 const FALLBACK_IMG = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f0f0ee"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23aaa" font-size="12" font-family="sans-serif"%3EImage manquante%3C/text%3E%3C/svg%3E';
@@ -10,6 +11,7 @@ const grid          = document.getElementById('product-grid');
 const countLabel    = document.getElementById('count-label');
 const emptyState    = document.getElementById('empty-state');
 const searchInput   = document.getElementById('search-input');
+const sizeSelect    = document.getElementById('size-select');
 const modalOverlay  = document.getElementById('modal-overlay');
 const modal         = document.getElementById('modal');
 const filterBtns    = document.querySelectorAll('.filter-btn');
@@ -35,8 +37,18 @@ function matchesSearch(p) {
   );
 }
 
+function matchesSize(p) {
+  if (!activeSize) return true;
+  const size = parseInt(activeSize, 10);
+  const parts = p.sizes.split('-');
+  if (parts.length !== 2) return false;
+  const min = parseInt(parts[0], 10);
+  const max = parseInt(parts[1], 10);
+  return size >= min && size <= max;
+}
+
 function filtered() {
-  return PRODUCTS.filter(p => matchesFilter(p) && matchesSearch(p));
+  return PRODUCTS.filter(p => matchesFilter(p) && matchesSearch(p) && matchesSize(p));
 }
 
 /* ─── Render ─────────────────────────────────────────────────── */
@@ -232,6 +244,12 @@ filterBtns.forEach(btn => {
 
 searchInput.addEventListener('input', e => {
   searchQuery = e.target.value.trim();
+  renderCards();
+});
+
+sizeSelect.addEventListener('change', e => {
+  activeSize = e.target.value;
+  sizeSelect.classList.toggle('active', activeSize !== '');
   renderCards();
 });
 

@@ -268,6 +268,27 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   border-color: var(--text);
 }
 
+.size-wrap {
+  position: relative; flex-shrink: 0;
+}
+.size-wrap svg {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+#size-select {
+  padding: 8px 30px 8px 30px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 13px; color: var(--text); font-family: var(--font);
+  cursor: pointer; transition: border-color 0.15s;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23585854' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+#size-select:focus { outline: none; border-color: var(--border-hi); background-color: var(--surface-hi); }
+#size-select option { background: var(--surface); color: var(--text); }
+#size-select.active { border-color: var(--text); color: var(--text); }
+
 .search-wrap {
   position: relative; flex-shrink: 0;
 }
@@ -419,9 +440,10 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   display: flex; align-items: center; gap: 10px;
 }
 .modal-header-brand img {
-  height: 22px; width: auto; max-width: 90px;
-  opacity: 0.80; object-fit: contain;
-  filter: brightness(0) invert(1);
+  width: auto; height: auto;
+  max-height: 24px; max-width: 100px;
+  object-fit: contain;
+  opacity: 0.90;
 }
 .modal-header-brand-name {
   font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
