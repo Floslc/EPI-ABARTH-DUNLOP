@@ -1,8 +1,10 @@
 /* ─── State ──────────────────────────────────────────────────── */
-let activeFilter  = 'tous';
-let searchQuery   = '';
-let activeSize    = '';   // pointure sélectionnée ('36', '42', … ou '' = toutes)
-let currentIndex  = 0;   // index dans la liste filtrée courante
+let activeCat    = '';   // '' | 'securite' | 'travail'
+let activeBrand  = '';   // '' | 'abarth'  | 'dunlop'
+let activeType   = '';   // '' | 'montante'| 'basse'
+let activeSize   = '';   // '' | '36'..'50'
+let searchQuery  = '';
+let currentIndex = 0;
 
 const FALLBACK_IMG = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f0f0ee"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23aaa" font-size="12" font-family="sans-serif"%3EImage manquante%3C/text%3E%3C/svg%3E';
 
@@ -14,15 +16,20 @@ const searchInput   = document.getElementById('search-input');
 const sizeSelect    = document.getElementById('size-select');
 const modalOverlay  = document.getElementById('modal-overlay');
 const modal         = document.getElementById('modal');
-const filterBtns    = document.querySelectorAll('.filter-btn');
+const filterToggle  = document.getElementById('filter-toggle');
+const filterBadge   = document.getElementById('filter-badge');
+const activeChips   = document.getElementById('active-chips');
+const drawer        = document.getElementById('filter-drawer');
+const drawerOverlay = document.getElementById('drawer-overlay');
 
 /* ─── Filter logic ───────────────────────────────────────────── */
 function matchesFilter(p) {
-  if (activeFilter === 'tous')     return true;
-  if (activeFilter === 'securite') return p.category === 'Sécurité';
-  if (activeFilter === 'travail')  return p.category === 'Travail';
-  if (activeFilter === 'abarth')   return p.brand === 'ABARTH';
-  if (activeFilter === 'dunlop')   return p.brand === 'DUNLOP';
+  if (activeCat === 'securite'  && p.category  !== 'Sécurité')  return false;
+  if (activeCat === 'travail'   && p.category  !== 'Travail')    return false;
+  if (activeBrand === 'abarth'  && p.brand     !== 'ABARTH')     return false;
+  if (activeBrand === 'dunlop'  && p.brand     !== 'DUNLOP')     return false;
+  if (activeType === 'montante' && p.shoe_type !== 'Montante')   return false;
+  if (activeType === 'basse'    && p.shoe_type !== 'Basse')      return false;
   return true;
 }
 
@@ -217,9 +224,100 @@ function openModal(idx) {
 }
 
 function closeModal() {
-  modalOverlay.classList.remove('open');
+  const m = document.getElementById('modal');
+  if (m) m.classList.add('closing');
+  modalOverlay.classList.add('closing');
+  setTimeout(() => {
+    modalOverlay.classList.remove('open', 'closing');
+    if (m) m.classList.remove('closing');
+    document.body.style.overflow = '';
+  }, 270);
+}
+
+/* ─── Chips & badge ─────────────────────────────────────────── */
+const CHIP_LABELS = {
+  cat:   { securite: 'Sécurité', travail: 'Travail' },
+  brand: { abarth: 'ABARTH', dunlop: 'DUNLOP' },
+  type:  { montante: 'Montantes', basse: 'Basses' }
+};
+
+function updateChips() {
+  const active = [
+    activeCat   ? { group: 'cat',   value: activeCat,   label: CHIP_LABELS.cat[activeCat] }   : null,
+    activeBrand ? { group: 'brand', value: activeBrand, label: CHIP_LABELS.brand[activeBrand] } : null,
+    activeType  ? { group: 'type',  value: activeType,  label: CHIP_LABELS.type[activeType] }  : null,
+  ].filter(Boolean);
+
+  const count = active.length;
+  filterBadge.textContent = count;
+  filterBadge.hidden = count === 0;
+  filterToggle.classList.toggle('has-active', count > 0);
+
+  activeChips.innerHTML = active.map(c => `
+    <span class="chip">
+      ${c.label}
+      <button class="chip-remove" data-group="${c.group}" aria-label="Retirer ${c.label}">
+        <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/>
+        </svg>
+      </button>
+    </span>`).join('');
+
+  activeChips.querySelectorAll('.chip-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const g = btn.dataset.group;
+      if (g === 'cat')   activeCat   = '';
+      if (g === 'brand') activeBrand = '';
+      if (g === 'type')  activeType  = '';
+      syncDrawerButtons();
+      updateChips();
+      renderCards();
+    });
+  });
+}
+
+/* ─── Drawer ─────────────────────────────────────────────────── */
+function openDrawer() {
+  drawer.classList.add('open');
+  drawerOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  drawerOverlay.classList.remove('open');
   document.body.style.overflow = '';
 }
+
+function syncDrawerButtons() {
+  drawer.querySelectorAll('.drawer-opt').forEach(btn => {
+    const g = btn.dataset.group, v = btn.dataset.value;
+    const state = g === 'cat' ? activeCat : g === 'brand' ? activeBrand : activeType;
+    btn.classList.toggle('active', v === state);
+  });
+}
+
+filterToggle.addEventListener('click', openDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+
+document.getElementById('drawer-reset').addEventListener('click', () => {
+  activeCat = ''; activeBrand = ''; activeType = '';
+  syncDrawerButtons();
+  updateChips();
+  renderCards();
+});
+
+drawer.querySelectorAll('.drawer-opt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const g = btn.dataset.group, v = btn.dataset.value;
+    if (g === 'cat')   activeCat   = v;
+    if (g === 'brand') activeBrand = v;
+    if (g === 'type')  activeType  = v;
+    syncDrawerButtons();
+    updateChips();
+    renderCards();
+  });
+});
 
 /* ─── Events ─────────────────────────────────────────────────── */
 modalOverlay.addEventListener('click', e => {
@@ -227,19 +325,14 @@ modalOverlay.addEventListener('click', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); return; }
+  if (e.key === 'Escape') {
+    if (drawer.classList.contains('open')) { closeDrawer(); return; }
+    closeModal();
+    return;
+  }
   if (!modalOverlay.classList.contains('open')) return;
   if (e.key === 'ArrowLeft')  renderModal(currentIndex - 1);
   if (e.key === 'ArrowRight') renderModal(currentIndex + 1);
-});
-
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilter = btn.dataset.filter;
-    renderCards();
-  });
 });
 
 searchInput.addEventListener('input', e => {
@@ -293,4 +386,5 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ─── Init ───────────────────────────────────────────────────── */
+updateChips();
 renderCards();

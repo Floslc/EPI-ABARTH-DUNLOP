@@ -74,48 +74,38 @@
 
     <!-- Toolbar -->
     <div class="catalogue-toolbar">
-      <div class="filter-group" role="group" aria-label="Filtrer par catégorie ou marque">
-        <button class="filter-btn active" data-filter="tous">Tous</button>
-        <button class="filter-btn" data-filter="securite">Sécurité</button>
-        <button class="filter-btn" data-filter="travail">Travail</button>
-        <button class="filter-btn" data-filter="abarth">ABARTH</button>
-        <button class="filter-btn" data-filter="dunlop">DUNLOP</button>
+      <div class="toolbar-left">
+        <button class="filter-toggle-btn" id="filter-toggle" aria-label="Ouvrir les filtres">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          Filtres
+          <span class="filter-badge" id="filter-badge" hidden></span>
+        </button>
+        <div class="active-chips" id="active-chips"></div>
       </div>
-      <div class="size-wrap">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 12h20M2 12l4-4M2 12l4 4M22 12l-4-4M22 12l-4 4"/>
-        </svg>
-        <select id="size-select" aria-label="Filtrer par pointure">
-          <option value="">Toutes tailles</option>
-          <option value="36">36</option>
-          <option value="37">37</option>
-          <option value="38">38</option>
-          <option value="39">39</option>
-          <option value="40">40</option>
-          <option value="41">41</option>
-          <option value="42">42</option>
-          <option value="43">43</option>
-          <option value="44">44</option>
-          <option value="45">45</option>
-          <option value="46">46</option>
-          <option value="47">47</option>
-          <option value="48">48</option>
-          <option value="50">50</option>
-        </select>
+      <div class="toolbar-right">
+        <div class="size-wrap">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12h20M2 12l4-4M2 12l4 4M22 12l-4-4M22 12l-4 4"/>
+          </svg>
+          <select id="size-select" aria-label="Filtrer par pointure">
+            <option value="">Toutes tailles</option>
+            <option value="36">36</option><option value="37">37</option><option value="38">38</option>
+            <option value="39">39</option><option value="40">40</option><option value="41">41</option>
+            <option value="42">42</option><option value="43">43</option><option value="44">44</option>
+            <option value="45">45</option><option value="46">46</option><option value="47">47</option>
+            <option value="48">48</option><option value="50">50</option>
+          </select>
+        </div>
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" id="search-input" placeholder="Rechercher…" aria-label="Recherche produit" autocomplete="off">
+        </div>
+        <div class="count-label" id="count-label" aria-live="polite"></div>
       </div>
-      <div class="search-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input
-          type="search"
-          id="search-input"
-          placeholder="Rechercher un modèle, REF…"
-          aria-label="Recherche produit"
-          autocomplete="off"
-        >
-      </div>
-      <div class="count-label" id="count-label" aria-live="polite"></div>
     </div>
 
     <!-- Grid -->
@@ -147,6 +137,48 @@
       </div>
     </div>
   </footer>
+
+  <!-- ─── FILTER DRAWER ──────────────────────────────────────── -->
+  <div id="drawer-overlay" aria-hidden="true"></div>
+  <aside id="filter-drawer" aria-label="Filtres" role="dialog">
+    <div class="drawer-header">
+      <span class="drawer-title">Filtres</span>
+      <button class="drawer-close" id="drawer-close" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <div class="drawer-section-title">Catégorie</div>
+        <div class="drawer-options">
+          <button class="drawer-opt active" data-group="cat" data-value="">Toutes</button>
+          <button class="drawer-opt" data-group="cat" data-value="securite">Sécurité</button>
+          <button class="drawer-opt" data-group="cat" data-value="travail">Travail</button>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">Marque</div>
+        <div class="drawer-options">
+          <button class="drawer-opt active" data-group="brand" data-value="">Toutes</button>
+          <button class="drawer-opt" data-group="brand" data-value="abarth">ABARTH</button>
+          <button class="drawer-opt" data-group="brand" data-value="dunlop">DUNLOP</button>
+        </div>
+      </div>
+      <div class="drawer-section">
+        <div class="drawer-section-title">Type</div>
+        <div class="drawer-options">
+          <button class="drawer-opt active" data-group="type" data-value="">Tous</button>
+          <button class="drawer-opt" data-group="type" data-value="montante">Montantes</button>
+          <button class="drawer-opt" data-group="type" data-value="basse">Basses</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="drawer-reset" id="drawer-reset">Réinitialiser les filtres</button>
+    </div>
+  </aside>
 
   <script src="data.js"></script>
   <script src="script.js"></script>
