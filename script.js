@@ -65,9 +65,11 @@ function badgeClass(category) {
 
 function renderCards() {
   const list = filtered();
-  grid.innerHTML = '';
+  // Remove only cards, keep emptyState out of the way
+  Array.from(grid.children).forEach(c => { if (c !== emptyState) c.remove(); });
 
   if (list.length === 0) {
+    grid.appendChild(emptyState);
     emptyState.style.display = 'block';
     countLabel.innerHTML = '<strong>0</strong> produit';
     return;
@@ -220,7 +222,7 @@ modalOverlay.addEventListener('touchend', e => {
 function openModal(idx) {
   renderModal(idx);
   modalOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockScroll();
 }
 
 function closeModal() {
@@ -230,7 +232,7 @@ function closeModal() {
   setTimeout(() => {
     modalOverlay.classList.remove('open', 'closing');
     if (m) m.classList.remove('closing');
-    document.body.style.overflow = '';
+    unlockScroll();
   }, 270);
 }
 
@@ -276,16 +278,42 @@ function updateChips() {
   });
 }
 
+/* ─── Scroll lock (iOS-compatible) ───────────────────────────── */
+let _scrollLockCount = 0;
+let _savedScrollY = 0;
+
+function lockScroll() {
+  if (_scrollLockCount === 0) {
+    _savedScrollY = window.scrollY;
+    document.body.style.overflow  = 'hidden';
+    document.body.style.position  = 'fixed';
+    document.body.style.top       = `-${_savedScrollY}px`;
+    document.body.style.width     = '100%';
+  }
+  _scrollLockCount++;
+}
+function unlockScroll() {
+  _scrollLockCount = Math.max(0, _scrollLockCount - 1);
+  if (_scrollLockCount === 0) {
+    document.body.style.overflow  = '';
+    document.body.style.position  = '';
+    document.body.style.top       = '';
+    document.body.style.width     = '';
+    window.scrollTo(0, _savedScrollY);
+  }
+}
+
 /* ─── Drawer ─────────────────────────────────────────────────── */
 function openDrawer() {
+  syncDrawerButtons();             // always in sync when opening
   drawer.classList.add('open');
   drawerOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockScroll();
 }
 function closeDrawer() {
   drawer.classList.remove('open');
   drawerOverlay.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockScroll();
 }
 
 function syncDrawerButtons() {
@@ -297,7 +325,15 @@ function syncDrawerButtons() {
 }
 
 filterToggle.addEventListener('click', openDrawer);
-drawerOverlay.addEventListener('click', closeDrawer);
+
+// close on overlay — handle both click and touchend for iOS reliability
+function overlayClose(e) {
+  e.preventDefault();
+  closeDrawer();
+}
+drawerOverlay.addEventListener('click', overlayClose);
+drawerOverlay.addEventListener('touchend', overlayClose, { passive: false });
+
 document.getElementById('drawer-close').addEventListener('click', closeDrawer);
 
 document.getElementById('drawer-reset').addEventListener('click', () => {
