@@ -63,10 +63,15 @@ function renderCards() {
     card.setAttribute('aria-label', p.name);
     card.style.animationDelay = `${i * 0.03}s`;
 
+    const brandLogoFile = `logo-${p.brand.toLowerCase()}.png`;
+
     card.innerHTML = `
       <div class="card-img-wrap">
-        <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+        <img class="card-product-img" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
         <span class="card-category-badge ${badgeClass(p.category)}">${p.category}</span>
+        <div class="card-brand-logo">
+          <img src="${brandLogoFile}" alt="${p.brand}" onerror="this.parentElement.style.display='none'">
+        </div>
       </div>
       <div class="card-body">
         <div class="card-ref">${p.ref}</div>
@@ -85,8 +90,8 @@ function renderCards() {
 
 /* ─── Modal ──────────────────────────────────────────────────── */
 function getBrandLogo(brand) {
-  if (brand === 'ABARTH') return '<img src="logo-abarth.svg" alt="Abarth" onerror="this.style.display=\'none\'">';
-  if (brand === 'DUNLOP') return '<img src="logo-dunlop.svg" alt="Dunlop" onerror="this.style.display=\'none\'">';
+  if (brand === 'ABARTH') return '<img src="logo-abarth.png" alt="Abarth" onerror="this.style.display=\'none\'">';
+  if (brand === 'DUNLOP') return '<img src="logo-dunlop.png" alt="Dunlop" onerror="this.style.display=\'none\'">';
   return '';
 }
 

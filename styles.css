@@ -239,17 +239,26 @@ button { cursor: pointer; border: none; font-family: var(--font); }
 
 .card-img-wrap {
   aspect-ratio: 4/3;
-  background: #1C1C19;
+  background: #fff;
   overflow: hidden;
   position: relative;
 }
-.card-img-wrap img {
+.card-img-wrap .card-product-img {
   width: 100%; height: 100%;
   object-fit: contain;
-  padding: 14px;
+  padding: 16px;
   transition: transform 0.35s ease;
 }
-.card:hover .card-img-wrap img { transform: scale(1.06); }
+.card:hover .card-img-wrap .card-product-img { transform: scale(1.06); }
+
+.card-brand-logo {
+  position: absolute; bottom: 8px; right: 8px;
+  opacity: 0.22; pointer-events: none;
+}
+.card-brand-logo img {
+  height: 13px; width: auto;
+  object-fit: contain; display: block;
+}
 
 .card-category-badge {
   position: absolute; top: 10px; left: 10px;
@@ -352,7 +361,7 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   overflow-y: auto; flex: 1;
 }
 .modal-img-wrap {
-  background: #1C1C19;
+  background: #fff;
   display: flex; align-items: center; justify-content: center;
   padding: 32px; min-height: 300px;
 }
@@ -489,13 +498,36 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   .hero-content { padding: 90px 20px 60px; }
   .catalogue-toolbar { flex-direction: column; align-items: stretch; }
   .filter-group { justify-content: flex-start; }
-  #product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .card-body { padding: 10px 12px 12px; }
   .hero-logos img { height: 20px; }
   .footer-logos { display: none; }
   #modal { max-height: 95vh; }
   .modal-body { grid-template-columns: 1fr; }
   #catalogue { padding: 28px 16px 60px; }
+
+  /* ── Mobile horizontal slider ── */
+  #product-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    /* bleed to catalogue edges for edge-to-edge feel */
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 4px 16px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #product-grid::-webkit-scrollbar { display: none; }
+  #product-grid .card {
+    flex: 0 0 82%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+  #empty-state {
+    flex: 0 0 calc(100vw - 32px);
+  }
 }
 
 @media (max-width: 360px) {
