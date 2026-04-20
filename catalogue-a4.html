@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue EPI — Chaussures de sécurité &amp; travail</title>
+  <style>
+
+    /* ─── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:      #C8281E;
+      --dark:     #1A1A18;
+      --mid:      #555553;
+      --muted:    #888886;
+      --border:   #E2E2DF;
+      --bg:       #F7F7F5;
+      --card:     #FFFFFF;
+      --imgbg:    #F2F2F0;
+    }
+
+    html { font-size: 10px; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ─── PAGE WRAP ──────────────────────────────────────────────── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 9mm 9mm 8mm;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────────── */
+    .doc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid var(--dark);
+      padding-bottom: 4mm;
+      margin-bottom: 5mm;
+    }
+
+    .doc-header-left {
+      display: flex;
+      align-items: center;
+      gap: 4mm;
+    }
+
+    .doc-logo {
+      height: 9mm;
+      width: auto;
+    }
+
+    .doc-sep {
+      width: 1px;
+      height: 7mm;
+      background: var(--border);
+    }
+
+    .doc-title-wrap {}
+    .doc-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--dark);
+      line-height: 1.1;
+    }
+    .doc-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+      margin-top: 0.5mm;
+    }
+
+    .doc-header-right {
+      text-align: right;
+    }
+    .doc-meta-line {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .doc-meta-line strong {
+      color: var(--mid);
+      font-weight: 600;
+    }
+
+    /* ─── SECTION LABEL ──────────────────────────────────────────── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 2.5mm;
+      margin-bottom: 2.5mm;
+    }
+    .section-label-dot {
+      width: 2mm;
+      height: 2mm;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+    }
+    .section-label-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .section-label-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-label-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ─── GRID ───────────────────────────────────────────────────── */
+    .product-section {
+      margin-bottom: 4mm;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5mm;
+    }
+
+    /* ─── CARD ───────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.5mm;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      break-inside: avoid;
+    }
+
+    .card-img-wrap {
+      background: var(--imgbg);
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .card-body {
+      padding: 1.5mm 2mm 2mm;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8mm;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1mm;
+    }
+
+    .card-brand {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .card-type-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.8mm;
+      padding: 0.2mm 1mm;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+
+    .card-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--dark);
+      letter-spacing: .01em;
+    }
+
+    .card-ref {
+      font-size: 0.62rem;
+      font-family: 'SF Mono', 'Courier New', monospace;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    .card-sizes {
+      font-size: 0.65rem;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 1mm;
+    }
+    .card-sizes-label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .card-prices {
+      margin-top: auto;
+      padding-top: 1mm;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1mm;
+    }
+
+    .card-price-ht {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1;
+    }
+
+    .card-price-ttc {
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+    .card-price-ttc strong {
+      color: var(--mid);
+      font-weight: 600;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .doc-footer {
+      margin-top: auto;
+      padding-top: 3mm;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .doc-footer-text {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .doc-footer-logos {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+    }
+    .doc-footer-logos img {
+      height: 4.5mm;
+      width: auto;
+      opacity: .65;
+    }
+
+    /* ─── PRINT ──────────────────────────────────────────────────── */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    @media print {
+      html { font-size: 10px; }
+
+      body {
+        background: #fff;
+        margin: 0;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        padding: 9mm 9mm 8mm;
+        box-shadow: none;
+      }
+
+      .card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+
+    /* ─── SCREEN RESPONSIVE ──────────────────────────────────────── */
+    @media screen {
+      body {
+        padding: 20px;
+        background: #E8E8E5;
+      }
+      .page {
+        box-shadow: 0 4px 32px rgba(0,0,0,.12);
+        border-radius: 3px;
+      }
+    }
+
+    @media screen and (max-width: 750px) {
+      body { padding: 0; background: #fff; }
+      html { font-size: 9px; }
+      .page {
+        width: 100%;
+        min-height: auto;
+        padding: 16px 14px 20px;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .doc-header {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .doc-header-right {
+        text-align: left;
+        width: 100%;
+        border-top: 1px solid var(--border);
+        padding-top: 6px;
+      }
+      .card-name { font-size: 0.85rem; }
+      .card-price-ht { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="doc-header">
+    <div class="doc-header-left">
+      <img src="LOGO OFFICIEL AIROUTIL.png" alt="Airoutil" class="doc-logo" onerror="this.style.display='none'">
+      <div class="doc-sep"></div>
+      <div class="doc-title-wrap">
+        <div class="doc-title">Catalogue EPI</div>
+        <div class="doc-subtitle">Chaussures de sécurité &amp; travail</div>
+      </div>
+    </div>
+    <div class="doc-header-right">
+      <div class="doc-meta-line"><strong>Normes</strong> EN ISO 20345 &amp; EN ISO 20347</div>
+      <div class="doc-meta-line"><strong>Marques</strong> ABARTH · DUNLOP</div>
+      <div class="doc-meta-line"><strong>Prix</strong> HT en vigueur — TTC à renseigner</div>
+    </div>
+  </header>
+
+  <!-- SECTION SÉCURITÉ -->
+  <div class="product-section">
+    <div class="section-label">
+      <div class="section-label-dot"></div>
+      <div class="section-label-text">Sécurité</div>
+      <div class="section-label-line"></div>
+      <div class="section-label-count">17 modèles</div>
+    </div>
+
+    <div class="product-grid">
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB01BK.jpg" alt="ABARTH 595 BLACK" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 BLACK</div>
+          <div class="card-ref">CHAB01BK-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">80,50 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB01BKRD.jpg" alt="ABARTH 595 BLACK/RED" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 BLACK/RED</div>
+          <div class="card-ref">CHAB01BKRD-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">80,50 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB0001CH.jpg" alt="ABARTH 595 CHALLENGE" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 CHALLENGE</div>
+          <div class="card-ref">CHAB01CH-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 50</div>
+          <div class="card-prices">
+            <span class="card-price-ht">83,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB01GR.jpg" alt="ABARTH 595 GREY" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 GREY</div>
+          <div class="card-ref">CHAB01GR-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">80,50 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB01NV.jpg" alt="ABARTH 595 NAVY" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 NAVY</div>
+          <div class="card-ref">CHAB01NV-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">80,50 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-595-CHAB01WH.jpg" alt="ABARTH 595 WHITE" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">595 WHITE</div>
+          <div class="card-ref">CHAB01WH-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">80,50 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-ESSEESSE-CHAB04BK.jpg" alt="ABARTH ESSEESSE" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">ESSEESSE</div>
+          <div class="card-ref">CHAB04BK-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">67,20 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-SCORPION-CHAB07ALBK.jpg" alt="ABARTH SCORPION ALTO" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Montante</span></div>
+          <div class="card-name">SCORPION ALTO</div>
+          <div class="card-ref">CHAB07ALBK-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">97,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-SCORPION-CHAB07BABK.jpg" alt="ABARTH SCORPION BASSO" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">SCORPION BASSO</div>
+          <div class="card-ref">CHAB07BABK-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">90,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-THUNDER-CHAB08TH.jpg" alt="ABARTH THUNDER" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">THUNDER</div>
+          <div class="card-ref">CHAB08TH</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">90,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-TRUCK-CHAB06PLUS.jpg" alt="ABARTH TRUCK" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">TRUCK</div>
+          <div class="card-ref">CHAB06PLUS-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">62,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-ZEROCENTO-CHAB03BA.jpg" alt="ABARTH ZEROCENTO BASSO S3" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">ZEROCENTO BASSO S3</div>
+          <div class="card-ref">CHAB03BA-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">55,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-ZEROCENTO-CHAB03PA.jpg" alt="ABARTH PARTENZA ESD S3" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">PARTENZA ESD S3</div>
+          <div class="card-ref">CHAB03PA-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">62,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/ABARTH-ZEROCENTO-CHAB03XT.jpg" alt="ABARTH ZEROCENTO X-TREM S3" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Montante</span></div>
+          <div class="card-name">ZEROCENTO X-TREM S3</div>
+          <div class="card-ref">CHAB03XT-XX</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">76,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/DUNLOP-FIRST ONE ADV-EVO LOW-CHDL0201050.jpg" alt="DUNLOP FIRST ONE ADV-EVO LOW S3" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">DUNLOP</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">FIRST ONE ADV-EVO LOW S3</div>
+          <div class="card-ref">CHDL0201050</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">62,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/DUNLOP-FIRST ONE ADV-EVO TITAN-CHDL0202008.jpg" alt="DUNLOP FIRST ONE ADV-EVO TITAN" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">DUNLOP</span><span class="card-type-badge">Montante</span></div>
+          <div class="card-name">FIRST ONE ADV-EVO TITAN</div>
+          <div class="card-ref">CHDL0202008</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>39 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">76,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="SECURITE/DUNLOP-SWORD LINE-CHDL0201047.jpg" alt="DUNLOP SWORD LINE BLUE ESD" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">DUNLOP</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">SWORD LINE BLUE ESD</div>
+          <div class="card-ref">CHDL0201047</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 47</div>
+          <div class="card-prices">
+            <span class="card-price-ht">83,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION TRAVAIL -->
+  <div class="product-section">
+    <div class="section-label">
+      <div class="section-label-dot"></div>
+      <div class="section-label-text">Travail</div>
+      <div class="section-label-line"></div>
+      <div class="section-label-count">4 modèles</div>
+    </div>
+
+    <div class="product-grid">
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="TRAVAIL/ABARTH-COMPETIZIONE-CHAB02GR.jpg" alt="ABARTH COMPETIZIONE GREY" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">COMPETIZIONE GREY</div>
+          <div class="card-ref">CHAB02GR</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">55,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="TRAVAIL/ABARTH-COMPETIZIONE-CHAB02NV.jpg" alt="ABARTH COMPETIZIONE NAVY" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">COMPETIZIONE NAVY</div>
+          <div class="card-ref">CHAB02NV</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">55,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="TRAVAIL/ABARTH-COMPETIZIONE-CHAB02WH.jpg" alt="ABARTH COMPETIZIONE WHITE" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">ABARTH</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">COMPETIZIONE WHITE</div>
+          <div class="card-ref">CHAB02WH</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">55,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrap"><img src="TRAVAIL/DUNLOP-O2 CARBON-CHDL0203004.jpg" alt="DUNLOP O2 CARBON" loading="eager"></div>
+        <div class="card-body">
+          <div class="card-top"><span class="card-brand">DUNLOP</span><span class="card-type-badge">Basse</span></div>
+          <div class="card-name">O2 CARBON</div>
+          <div class="card-ref">CHDL0203004</div>
+          <div class="card-sizes"><span class="card-sizes-label">T.</span>36 – 48</div>
+          <div class="card-prices">
+            <span class="card-price-ht">55,30 €</span>
+            <span class="card-price-ttc">TTC <strong>À renseigner</strong></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="doc-footer">
+    <span class="doc-footer-text">Catalogue EPI · Tarifs HT en vigueur · Prix TTC à renseigner selon taux applicable</span>
+    <div class="doc-footer-logos">
+      <img src="logo-abarth.svg" alt="Abarth" onerror="this.style.display='none'">
+      <img src="logo-dunlop.svg" alt="Dunlop" onerror="this.style.display='none'">
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
