@@ -193,6 +193,37 @@ searchInput.addEventListener('input', e => {
 
 document.getElementById('print-btn').addEventListener('click', () => window.print());
 
+/* ─── Loader ─────────────────────────────────────────────────── */
+(function () {
+  const loader = document.getElementById('loader');
+  if (!loader) return;
+  document.body.classList.add('loading');
+
+  function dismissLoader() {
+    loader.classList.add('hide');
+    document.body.classList.remove('loading');
+    setTimeout(() => loader.remove(), 650);
+  }
+
+  // Dismiss after animations complete (~1.8s) or on window load, whichever is later
+  const minDelay = 1800;
+  const start = Date.now();
+
+  function onReady() {
+    const elapsed = Date.now() - start;
+    const remaining = Math.max(0, minDelay - elapsed);
+    setTimeout(dismissLoader, remaining);
+  }
+
+  if (document.readyState === 'complete') {
+    onReady();
+  } else {
+    window.addEventListener('load', onReady, { once: true });
+    // Safety fallback
+    setTimeout(dismissLoader, 4000);
+  }
+})();
+
 /* ─── Nav scroll ─────────────────────────────────────────────── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
