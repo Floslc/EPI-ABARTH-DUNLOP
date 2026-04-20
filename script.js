@@ -1,6 +1,7 @@
 /* ─── State ──────────────────────────────────────────────────── */
-let activeFilter = 'tous';
-let searchQuery  = '';
+let activeFilter  = 'tous';
+let searchQuery   = '';
+let currentIndex  = 0;   // index dans la liste filtrée courante
 
 const FALLBACK_IMG = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150"%3E%3Crect width="200" height="150" fill="%23f0f0ee"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23aaa" font-size="12" font-family="sans-serif"%3EImage manquante%3C/text%3E%3C/svg%3E';
 
@@ -82,8 +83,8 @@ function renderCards() {
         </div>
       </div>`;
 
-    card.addEventListener('click', () => openModal(p));
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(p); });
+    card.addEventListener('click', () => openModal(i));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(i); });
     grid.appendChild(card);
   });
 }
@@ -95,8 +96,14 @@ function getBrandLogo(brand) {
   return '';
 }
 
-function openModal(p) {
+function renderModal(idx) {
+  const list = filtered();
+  if (!list.length) return;
+  currentIndex = Math.max(0, Math.min(idx, list.length - 1));
+  const p   = list[currentIndex];
   const ttc = p.price_ttc && p.price_ttc.trim() !== '' ? p.price_ttc : 'À renseigner';
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < list.length - 1;
 
   modal.innerHTML = `
     <div class="modal-header">
@@ -104,11 +111,26 @@ function openModal(p) {
         ${getBrandLogo(p.brand)}
         <span class="modal-header-brand-name">${p.brand}</span>
       </div>
-      <button class="modal-close" id="modal-close-btn" aria-label="Fermer">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/>
-        </svg>
-      </button>
+      <div class="modal-header-right">
+        <div class="modal-nav">
+          <button class="modal-nav-btn" id="modal-prev" aria-label="Précédent" ${hasPrev ? '' : 'disabled'}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="7.5,2 3.5,6 7.5,10"/>
+            </svg>
+          </button>
+          <span class="modal-nav-count">${currentIndex + 1} / ${list.length}</span>
+          <button class="modal-nav-btn" id="modal-next" aria-label="Suivant" ${hasNext ? '' : 'disabled'}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4.5,2 8.5,6 4.5,10"/>
+            </svg>
+          </button>
+        </div>
+        <button class="modal-close" id="modal-close-btn" aria-label="Fermer">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="modal-body">
       <div class="modal-img-wrap">
@@ -157,10 +179,25 @@ function openModal(p) {
       </div>
     </div>`;
 
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  document.getElementById('modal-prev').addEventListener('click', () => renderModal(currentIndex - 1));
+  document.getElementById('modal-next').addEventListener('click', () => renderModal(currentIndex + 1));
+
+  // Swipe tactile
+  let touchStartX = 0;
+  modal.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  modal.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0 && hasNext) renderModal(currentIndex + 1);
+    if (dx > 0 && hasPrev) renderModal(currentIndex - 1);
+  }, { passive: true });
+}
+
+function openModal(idx) {
+  renderModal(idx);
   modalOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
 }
 
 function closeModal() {
@@ -174,7 +211,10 @@ modalOverlay.addEventListener('click', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') { closeModal(); return; }
+  if (!modalOverlay.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft')  renderModal(currentIndex - 1);
+  if (e.key === 'ArrowRight') renderModal(currentIndex + 1);
 });
 
 filterBtns.forEach(btn => {

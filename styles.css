@@ -407,6 +407,9 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--text-muted);
 }
+.modal-header-right {
+  display: flex; align-items: center; gap: 6px;
+}
 .modal-close {
   width: 30px; height: 30px; border-radius: 50%;
   background: var(--border); display: flex; align-items: center; justify-content: center;
@@ -414,6 +417,25 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   flex-shrink: 0;
 }
 .modal-close:hover { background: var(--red); color: #fff; }
+
+.modal-nav {
+  display: flex; align-items: center; gap: 2px;
+}
+.modal-nav-btn {
+  width: 28px; height: 28px; border-radius: 4px;
+  background: transparent; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); transition: all 0.15s;
+  flex-shrink: 0;
+}
+.modal-nav-btn:hover { border-color: var(--border-hi); color: var(--text-mid); background: var(--surface-hi); }
+.modal-nav-btn:disabled { opacity: 0.22; pointer-events: none; }
+
+.modal-nav-count {
+  font-size: 10px; color: var(--text-muted);
+  letter-spacing: 0.06em; padding: 0 6px;
+  white-space: nowrap;
+}
 
 .modal-body {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -563,30 +585,7 @@ button { cursor: pointer; border: none; font-family: var(--font); }
   .modal-body { grid-template-columns: 1fr; }
   #catalogue { padding: 28px 16px 60px; }
 
-  /* ── Mobile horizontal slider ── */
-  #product-grid {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    gap: 12px;
-    /* bleed to catalogue edges for edge-to-edge feel */
-    margin-left: -16px;
-    margin-right: -16px;
-    padding: 4px 16px 16px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  #product-grid::-webkit-scrollbar { display: none; }
-  #product-grid .card {
-    flex: 0 0 82%;
-    max-width: 320px;
-    scroll-snap-align: start;
-  }
-  #empty-state {
-    flex: 0 0 calc(100vw - 32px);
-  }
+  #product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 
 @media (max-width: 360px) {
