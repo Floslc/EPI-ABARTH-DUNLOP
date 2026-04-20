@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue EPI — Chaussures de sécurité &amp; travail</title>
+  <meta name="description" content="Catalogue chaussures EPI — Sécurité et Travail. Marques ABARTH et DUNLOP." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── NAV ────────────────────────────────────────────────── -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="nav-brand-text">Catalogue EPI</span>
+        <span class="nav-tagline">Chaussures de sécurité &amp; travail</span>
+      </div>
+      <button class="nav-print" id="print-btn" aria-label="Imprimer le catalogue">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Imprimer
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-bg-img" aria-hidden="true"></div>
+    <div class="hero-line-top" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        <span>Équipements de Protection Individuelle</span>
+      </div>
+      <h1 class="hero-title">Chaussures<br><em>Sécurité &amp; Travail</em></h1>
+      <p class="hero-desc">
+        Gamme professionnelle certifiée.<br>
+        Normes EN ISO 20345 &amp; EN ISO 20347.
+      </p>
+      <div class="hero-logos">
+        <img src="logo-abarth.svg" alt="Abarth" onerror="this.style.display='none'">
+        <img src="logo-dunlop.svg" alt="Dunlop" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span>Catalogue</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── CATALOGUE ───────────────────────────────────────────── -->
+  <main id="catalogue">
+
+    <!-- Toolbar -->
+    <div class="catalogue-toolbar">
+      <div class="filter-group" role="group" aria-label="Filtrer par catégorie ou marque">
+        <button class="filter-btn active" data-filter="tous">Tous</button>
+        <button class="filter-btn" data-filter="securite">Sécurité</button>
+        <button class="filter-btn" data-filter="travail">Travail</button>
+        <button class="filter-btn" data-filter="abarth">ABARTH</button>
+        <button class="filter-btn" data-filter="dunlop">DUNLOP</button>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Rechercher un modèle, REF…"
+          aria-label="Recherche produit"
+          autocomplete="off"
+        >
+      </div>
+      <div class="count-label" id="count-label" aria-live="polite"></div>
+    </div>
+
+    <!-- Grid -->
+    <div id="product-grid" role="list" aria-label="Catalogue produits">
+      <div id="empty-state" role="status">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <p>Aucun produit ne correspond à votre recherche.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ─── MODAL ───────────────────────────────────────────────── -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-label="Détail produit">
+    <div id="modal"></div>
+  </div>
+
+  <!-- ─── FOOTER ──────────────────────────────────────────────── -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <p class="footer-text">
+        Catalogue EPI · Tarifs HT en vigueur · Prix TTC à renseigner selon taux applicable
+      </p>
+      <div class="footer-logos">
+        <img src="logo-abarth.svg" alt="Abarth" onerror="this.style.display='none'">
+        <img src="logo-dunlop.svg" alt="Dunlop" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
