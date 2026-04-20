@@ -182,17 +182,21 @@ function renderModal(idx) {
   document.getElementById('modal-close-btn').addEventListener('click', closeModal);
   document.getElementById('modal-prev').addEventListener('click', () => renderModal(currentIndex - 1));
   document.getElementById('modal-next').addEventListener('click', () => renderModal(currentIndex + 1));
-
-  // Swipe tactile
-  let touchStartX = 0;
-  modal.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  modal.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) < 40) return;
-    if (dx < 0 && hasNext) renderModal(currentIndex + 1);
-    if (dx > 0 && hasPrev) renderModal(currentIndex - 1);
-  }, { passive: true });
 }
+
+/* Swipe tactile — attaché une seule fois sur l'overlay */
+let _touchStartX = 0;
+modalOverlay.addEventListener('touchstart', e => {
+  _touchStartX = e.touches[0].clientX;
+}, { passive: true });
+modalOverlay.addEventListener('touchend', e => {
+  if (!modalOverlay.classList.contains('open')) return;
+  const dx = e.changedTouches[0].clientX - _touchStartX;
+  if (Math.abs(dx) < 44) return;
+  const list = filtered();
+  if (dx < 0 && currentIndex < list.length - 1) renderModal(currentIndex + 1);
+  if (dx > 0 && currentIndex > 0)               renderModal(currentIndex - 1);
+}, { passive: true });
 
 function openModal(idx) {
   renderModal(idx);
